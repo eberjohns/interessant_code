@@ -1,6 +1,6 @@
 let canvas = document.getElementById("canvas");
 
-let grid_size = 50;
+let grid_size = 5;
 
 // let length = window.innerHeight - window.innerHeight%grid_size;
 
@@ -24,8 +24,8 @@ let angle_in_rad = (angle * Math.PI)/180;
 // });
 
 let zoom_step = 1.1;
-let min_zoom = 0.7;
-let max_zoom = 7;
+let min_zoom = 1.2;
+let max_zoom = 50;
 let zoom = (min_zoom+max_zoom)/2;
 
 document.addEventListener("keydown",function(event){
@@ -88,7 +88,7 @@ function draw() {
 }
 
 
-let speed = 1;
+let speed = 0.1;
 function update(){
     angle+=speed;
     if(angle>360){
