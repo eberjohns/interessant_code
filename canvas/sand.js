@@ -60,48 +60,30 @@ function updateMouseGridPosition(event) {
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
 
-    // Convert pixel to grid cell coordinates
-    const gridX = Math.floor(mouseX / size) * size;
-    const gridY = Math.floor(mouseY / size) * size;
-
-    draw_grain(gridX,gridY);
+    mouseGridX = Math.floor(mouseX / size);
+    mouseGridY = Math.floor(mouseY / size);
 }
 
-// document.addEventListener('click',function(event){
-//     //when left clicked get the x, y to draw a rect (sand grain)
-//     if(event.button === 0){
-//         console.log("Left mouse clicked");
-//         const rect = canvas.getBoundingClientRect();
-//         const mouseX = event.clientX - rect.left;
-//         const mouseY = event.clientY - rect.top;
+// Gravity Update + Spawn new grain if mouse is down
+function update() {
+    // Place sand grain while mouse is held down
+    if (isMouseDown) {
+        if (mouseGridY >= 0 && mouseGridY < row - 1 && data[mouseGridY][mouseGridX] === 0) {
+            data[mouseGridY][mouseGridX] = 1;
+        }
+    }
 
-//         // Convert pixel to grid cell coordinates
-//         const gridX = Math.floor(mouseX / size) * size;
-//         const gridY = Math.floor(mouseY / size) * size;
-
-//         // if(!data[gridY/size][gridX/size]) {
-//         //     data[gridY/size][gridX/size] = 1;
-//         // }
-//         draw_grain(gridX,gridY);
-//     }
-// });
-
-function draw_grain(x,y){
-    //don't draw if the cell is already 1(1 represents ground and sand grain)
-    if(data[y/size][x/size]) return;
-
-    ctx.fillStyle = "red";//grain color
-    ctx.fillRect(x, y, size, size);
-    let dataY = y/size;
-    let dataX = x/size;
-    data[dataY][dataX] = 1;
-
-    //update to fall if the bottom is not 1
-    if(data[dataY+1][dataX]) return;
-    data[dataY][dataX] = 0;
-    ctx.fillStyle = "blue";//color is canvas color as the grain fell
-    ctx.fillRect(x, y, size, size);
-    draw_grain(x,y+size);//draw grain under current one
+    // Gravity logic
+    for (let i = row - 2; i >= 0; i--) {
+        for (let j = 0; j < col; j++) {
+            if (data[i][j] === 1) {
+                if (data[i + 1][j] === 0) {
+                    data[i + 1][j] = 1;
+                    data[i][j] = 0;
+                }
+            }
+        }
+    }
 }
 
 ctx.strokeStyle = "black";
@@ -117,8 +99,6 @@ function draw(){
     }
 }
 
-draw();
-
 function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     draw();
@@ -127,4 +107,4 @@ function animate(){
     requestAnimationFrame(animate);
 }
 
-// animate();
+animate();
