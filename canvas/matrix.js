@@ -47,6 +47,29 @@ class Matrix{
         return result;
     }
 
+    static fromArray(arr){
+        let result = new Matrix(arr.length,1);
+
+        for(let i=0;i<arr.length;i++){
+            result.data[i] = [];
+            result.data[i][0] = arr[i];
+        }
+
+        return result;
+    }
+
+    static toArray(mat){
+        let result = [];
+
+        for(let i=0;i<mat.row;i++){
+            for(let j=0;j<mat.col;j++){
+                result.push(mat.data[i][j]);
+            }
+        }
+
+        return result;
+    }
+
     add(n){
         if(n instanceof Matrix){
             //cardinality check
