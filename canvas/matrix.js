@@ -117,6 +117,53 @@ class Matrix{
         }
     }
 
+    subtract(n){
+        if(n instanceof Matrix){
+            //cardinality check
+            if(this.row !== n.row || this.col !== n.col){
+                console.log("Can't subtract as cardinality doesn't match!!");
+                return null;
+            }
+            for(let i=0;i<this.row;i++){
+                for(let j=0;j<this.col;j++){
+                    this.data[i][j] -= n.data[i][j];
+                }
+            }
+        }else{
+            for(let i=0;i<this.row;i++){
+                for(let j=0;j<this.col;j++){
+                    this.data[i][j] -=n;
+                }
+            }
+        }
+    }
+
+    static subtract(a,b){
+        if(a instanceof Matrix && b instanceof Matrix){
+            //cardinality check
+            if(a.row !== b.row || a.col !== b.col){
+                console.log("Can't subtract as cardinality doesn't match!!");
+                return null;
+            }
+            let result = new Matrix(a.row,a.col);
+            for(let i=0;i<a.row;i++){
+                for(let j=0;j<a.col;j++){
+                    result.data[i][j] = a.data[i][j] - b.data[i][j];
+                }
+            }
+            return result;
+        }else{
+            let result = new Matrix(a.row,a.col);
+            for(let i=0;i<a.row;i++){
+                for(let j=0;j<a.col;j++){
+                    result.data[i][j] = a.data[i][j] - b;
+                }
+            }
+
+            return result;
+        }
+    }
+
     multiply(n){
         if(n instanceof Matrix){
             //cardinality check
