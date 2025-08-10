@@ -67,7 +67,7 @@ class Point{
 }
 
 let point = [];
-let noOfPoints = 100;
+let noOfPoints = 1000;
 
 function draw_line(){
     let x1 = -width / 2;
@@ -123,7 +123,7 @@ let w2 = Math.random();
 let bias = Math.random();
 
 function train(){
-    let lr = 0.05;
+    let lr = 0.99;
     let epoch = 100;
 
     new_line_element.textContent = `m = ${m} | c = ${c}`;
@@ -136,16 +136,16 @@ function train(){
             w1 += lr * point[i].x * error;
             w2 += lr * point[i].y * error;
             bias += lr * error * 10;
-
-            ctx.clearRect(0, 0, width, height);
-            draw_line();
-            draw_points();
-            draw_predic_line();
         }
+        lr *= 0.75;//decrease the learning rate after each pass
+        ctx.clearRect(0, 0, width, height);
+        draw_line();
+        draw_points();        
+        draw_predic_line();
     }
 
     predic_line_element.textContent = `Values of perceptron: w1 = ${w1.toFixed(2)} | w2 = ${w2.toFixed(2)} | bias = ${bias.toFixed(2)}`;
-    new_line_element.textContent = `Predicted line: m = ${(-w1 / w2).toFixed(2)} | c = ${(-bias / w2).toFixed(2)}`;
+    new_line_element.textContent = `Predicted line: m = ${(-w1 / w2).toFixed(2)} | c = ${(-bias / w2).toFixed(2)}    |  ${lr}`;
 }
 
 function draw_predic_line(){
