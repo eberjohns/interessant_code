@@ -7,24 +7,11 @@ class Matrix{
 
     randomise(){
         for(let i=0;i<this.data.length;i++)
-            this.data[i] = Math.round(Math.random()*20);//Math.round(Math.random()*2 - 1);
+            this.data[i] = Math.round(Math.random()*5 + 1);//Math.round(Math.random()*2 - 1);
     }
 
-    //to change!!!
     transpose(){
-        let newData = [];
-        for(let i=0;i<this.cols;i++){
-            newData[i] = [];
-            for(let j=0;j<this.rows;j++){
-                newData[i][j] = this.data[j][i];
-            }
-        }
-
-        let temp = this.rows;
-        this.rows = this.cols;
-        this.cols = temp;
-
-        this.data = newData;
+        //write inplace transposing if needed
     }
 
     static transpose(mat){
@@ -57,7 +44,6 @@ class Matrix{
         return result;
     }
 
-    //continue modifying from here
     add(n){
         if(n instanceof Matrix){
             //cardinality check
@@ -65,17 +51,11 @@ class Matrix{
                 console.log("Can't add as cardinality doesn't match!!");
                 return null;
             }
-            for(let i=0;i<this.rows;i++){
-                for(let j=0;j<this.cols;j++){
-                    this.data[i][j] += n.data[i][j];
-                }
-            }
+            for(let i=0;i<this.data.length;i++)
+                this.data[i] += n.data[i];
         }else{
-            for(let i=0;i<this.rows;i++){
-                for(let j=0;j<this.cols;j++){
-                    this.data[i][j] +=n;
-                }
-            }
+            for(let i=0;i<this.data.length;i++)
+                this.data[i] +=n;
         }
     }
 
@@ -87,19 +67,14 @@ class Matrix{
                 return null;
             }
             let result = new Matrix(a.rows,a.cols);
-            for(let i=0;i<a.rows;i++){
-                for(let j=0;j<a.cols;j++){
-                    result.data[i][j] = a.data[i][j] + b.data[i][j];
-                }
-            }
+            for(let i=0;i<a.data.length;i++)
+                result.data[i] = a.data[i] + b.data[i];
+
             return result;
         }else{
             let result = new Matrix(a.rows,a.cols);
-            for(let i=0;i<a.rows;i++){
-                for(let j=0;j<a.cols;j++){
-                    result.data[i][j] = a.data[i][j] + b;
-                }
-            }
+            for(let i=0;i<a.data.length;i++)
+                result.data[i] = a.data[i] + b;
 
             return result;
         }
@@ -112,17 +87,11 @@ class Matrix{
                 console.log("Can't subtract as cardinality doesn't match!!");
                 return null;
             }
-            for(let i=0;i<this.rows;i++){
-                for(let j=0;j<this.cols;j++){
-                    this.data[i][j] -= n.data[i][j];
-                }
-            }
+            for(let i=0;i<this.data.length;i++)
+                this.data[i] -= n.data[i];
         }else{
-            for(let i=0;i<this.rows;i++){
-                for(let j=0;j<this.cols;j++){
-                    this.data[i][j] -=n;
-                }
-            }
+            for(let i=0;i<this.data.length;i++)
+                this.data[i] -=n;
         }
     }
 
@@ -134,19 +103,14 @@ class Matrix{
                 return null;
             }
             let result = new Matrix(a.rows,a.cols);
-            for(let i=0;i<a.rows;i++){
-                for(let j=0;j<a.cols;j++){
-                    result.data[i][j] = a.data[i][j] - b.data[i][j];
-                }
-            }
+            for(let i=0;i<a.data.length;i++)
+                result.data[i] = a.data[i] - b.data[i];
+
             return result;
         }else{
             let result = new Matrix(a.rows,a.cols);
-            for(let i=0;i<a.rows;i++){
-                for(let j=0;j<a.cols;j++){
-                    result.data[i][j] = a.data[i][j] - b;
-                }
-            }
+            for(let i=0;i<a.data.length;i++)
+                result.data[i] = a.data[i] - b;
 
             return result;
         }
@@ -159,25 +123,21 @@ class Matrix{
                 console.log("Can't multiply as cardinality doesn't match!!");
                 return null;
             }
-            let newData = [];
+            let newData = new Float32Array(this.rows*n.cols);
             for(let i=0;i<this.rows;i++){
-                newData[i] = [];
                 for(let j=0;j<n.cols;j++){
                     let sum = 0;
-                    for(let k=0;k<this.cols;k++){
-                        sum += this.data[i][k] * n.data[k][j];
+                    for(let k=0;k<n.rows;k++){
+                        sum += this.data[k*this.rows+i] * n.data[j*n.rows+k];
                     }
-                    newData[i][j] = sum;
+                    newData[j*this.rows+i] = sum;
                 }
             }
             this.cols = n.cols;
             this.data = newData;
         }else{
-            for(let i=0;i<this.rows;i++){
-                for(let j=0;j<this.cols;j++){
-                    this.data[i][j] *=n;
-                }
-            }
+            for(let i=0;i<this.data.length;i++)
+                this.data[i] *=n;
         }
     }
 
@@ -193,39 +153,32 @@ class Matrix{
             for(let i=0;i<a.rows;i++){
                 for(let j=0;j<b.cols;j++){
                     let sum = 0;
-                    for(let k=0;k<a.cols;k++){
-                        sum += a.data[i][k] * b.data[k][j];
+                    for(let k=0;k<b.rows;k++){
+                        sum += a.data[k*a.rows+i] * b.data[j*b.rows+k];
                     }
-                    result.data[i][j] = sum;
+                    result.data[j*a.rows+i] = sum;
                 }
             }
             return result;
         }else{
             let result = new Matrix(a.rows,a.cols);
-            for(let i=0;i<a.rows;i++){
-                for(let j=0;j<a.cols;j++){
-                    result.data[i][j] = a.data[i][j] * b;
-                }
-            }
+            for(let i=0;i<a.data.length;i++)
+                result.data[i] = a.data[i] * b;
+
             return result;
         }
     }
 
     map(func){
-        for(let i=0;i<this.rows;i++){
-            for(let j=0;j<this.cols;j++){
-                this.data[i][j]  = func(this.data[i][j], i, j);
-            }
-        }
+        for(let i=0;i<this.data.length;i++)
+            this.data[i]  = func(this.data[i]);
     }
 
     static map(m, func) {
         let result = new Matrix(m.rows, m.cols);
-        for(let i=0;i<m.rows;i++){
-            for(let j=0;j<m.cols;j++){
-                result.data[i][j] = func(m.data[i][j], i, j);
-            }
-        }
+        for(let i=0;i<m.data.length;i++)
+            result.data[i] = func(m.data[i]);
+
         return result;
     }
 
@@ -234,13 +187,11 @@ class Matrix{
             console.log("Cardinality mismatch in hadamard product");
             return null;
         }
-        for(let i=0;i<this.rows;i++){
-            for(let j=0;j<this.cols;j++){
-                this.data[i][j] *= n.data[i][j];
-            }
-        }
+        for(let i=0;i<this.data.length;i++)
+            this.data[i] *= n.data[i];
     }
 
+    //testing helper function
     print() {
         let p_data = [];
 
@@ -259,20 +210,15 @@ mat.randomise();
 console.log("mat:");
 mat.print();
 
-let mat1 = Matrix.transpose(mat)
+let mat1 = new Matrix(3,2);
+mat1.randomise();
 console.log("mat1:");
 mat1.print();
 
-let arr = Matrix.toArray(mat1);
-console.table(arr);
-
-let array = [];
-
-for(let i = 0;i<4;i++)
-    array[i] = i+1;
-
-let mat2 = Matrix.fromArray(array);
+let mat2 = new Matrix(3,2);
+mat2.randomise();
+console.log("mat2:");
 mat2.print();
 
-// let mat2 = Matrix.multiply(mat,mat1);
-// mat2.print();
+let mat4 = Matrix.multiply(mat,mat1);
+mat4.print();
