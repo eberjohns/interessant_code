@@ -17,7 +17,7 @@ let training_data = [{
 
 let nn = new NeuralNetwork(2,2,1);
 
-for(let i=0;i<500000;i++){
+for(let i=0;i<50000;i++){
     let data = training_data[Math.floor(Math.random()*4)];
     nn.train(data.inputs,data.targets);
 }

@@ -7,7 +7,7 @@ class Matrix{
 
     randomise(){
         for(let i=0;i<this.data.length;i++)
-            this.data[i] = Math.round(Math.random()*5 + 1);//Math.round(Math.random()*2 - 1);
+            this.data[i] = Math.round(Math.random()*2 - 1);
     }
 
     transpose(){
@@ -204,21 +204,3 @@ class Matrix{
         console.table(p_data);
     }
 }
-
-let mat = new Matrix(2,3);
-mat.randomise();
-console.log("mat:");
-mat.print();
-
-let mat1 = new Matrix(3,2);
-mat1.randomise();
-console.log("mat1:");
-mat1.print();
-
-let mat2 = new Matrix(3,2);
-mat2.randomise();
-console.log("mat2:");
-mat2.print();
-
-let mat4 = Matrix.multiply(mat,mat1);
-mat4.print();
