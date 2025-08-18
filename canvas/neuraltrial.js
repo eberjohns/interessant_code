@@ -17,12 +17,23 @@ let training_data = [{
 
 let nn = new NeuralNetwork(2,2,1);
 
-for(let i=0;i<50000;i++){
-    let data = training_data[Math.floor(Math.random()*4)];
-    nn.train(data.inputs,data.targets);
-}
+// for(let i=0;i<50000;i++){
+    let inputs_array = [];
+    let targets_array = [];
+    //batch size 4
+    for(let j = 0;j<4;j++){
+        let data = training_data[Math.floor(Math.random()*4)];
+        inputs_array[j] = data.inputs;
+        targets_array[j] = data.targets;
+    }
+    
+    nn.train(inputs_array,targets_array);
+// }
 
-console.log(nn.feedforward([0,0]));
-console.log(nn.feedforward([0,1]));
-console.log(nn.feedforward([1,0]));
-console.log(nn.feedforward([1,1]));
+console.table(inputs_array);
+console.table(nn.predict(inputs_array));
+
+// console.log(nn.predict([0,0]));
+// console.log(nn.predict([0,1]));
+// console.log(nn.predict([1,0]));
+// console.log(nn.predict([1,1]));

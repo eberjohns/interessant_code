@@ -34,6 +34,19 @@ class Matrix{
         return result;
     }
 
+    static fromArray2D(arr){
+        let r = arr[0].length, c = arr.length;
+        let result = new Matrix(r,c);
+
+        for(let i=0;i<r;i++){
+            for(let j=0;j<c;j++){
+               result.data[j*r+i] = arr[j][i];
+            }
+        }
+
+        return result;
+    }
+
     static toArray(mat){
         let result = [];
 
@@ -42,6 +55,14 @@ class Matrix{
             result.push(mat.data[i]);
 
         return result;
+    }
+
+    addColumnWise(cVec){
+        for(let i=0;i<this.cols;i++){
+            for(let j=0;j<this.rows;j++){
+               this.data[i*this.rows+j] += cVec.data[j];
+            }
+        }
     }
 
     add(n){

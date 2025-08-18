@@ -32,27 +32,26 @@ class NeuralNetwork{
         this.lr = 0.1;
     }
 
-    feedforward(inputs){
-        inputs = Matrix.fromArray(inputs);
+    predict(inputs){//feedforward
+        inputs = Matrix.fromArray2D(inputs);
 
         //hidden section:
         //outputs_ih = (W*I + B)
         let outputs_ih = Matrix.multiply(this.weights_ih,inputs);
-        outputs_ih.add(this.bias_ih);
+        outputs_ih.addColumnWise(this.bias_ih);
         outputs_ih.map(sigmoid);
 
         //output section:
         // outputs_ho = (w*a_o + B)
         let outputs_ho = Matrix.multiply(this.weights_ho,outputs_ih);
-        outputs_ho.add(this.bias_ho);
+        outputs_ho.addColumnWise(this.bias_ho);
         outputs_ho.map(sigmoid);
 
         return Matrix.toArray(outputs_ho);
     }
 
     train(inputs,targets){
-        // let outputs = this.feedforward(inputs);
-        // outputs = Matrix.fromArray(outputs);
+        //feedforward section:
         inputs = Matrix.fromArray(inputs);
 
         //hidden section:
@@ -70,14 +69,15 @@ class NeuralNetwork{
         let a_outputs_ho = Matrix.map(outputs_ho,sigmoid);
 
         // _______________________________________________________________
+        //backpropogation section:
 
         //calculate output layer errors
         targets = Matrix.fromArray(targets);
-        let output_errors = Matrix.subtract(targets,a_outputs_ho);
+        let errors_ho = Matrix.subtract(targets,a_outputs_ho);
 
         //calculate gradient descent using error
         let gradients_ho = Matrix.map(a_outputs_ho,dsigmoid);
-        gradients_ho.hadamard(output_errors);
+        gradients_ho.hadamard(errors_ho);
         gradients_ho.multiply(this.lr);
 
         let a_outputs_ih_T = Matrix.transpose(a_outputs_ih);
@@ -87,11 +87,11 @@ class NeuralNetwork{
 
         //calculate hidden layer errors
         let weights_hoT = Matrix.transpose(this.weights_ho);
-        let hidden_errors = Matrix.multiply(weights_hoT,gradients_ho);
+        let errors_ih = Matrix.multiply(weights_hoT,gradients_ho);
 
         //calculate gradient descent using error
         let gradients_ih = Matrix.map(a_outputs_ih,dsigmoid);
-        gradients_ih.hadamard(hidden_errors);
+        gradients_ih.hadamard(errors_ih);
         gradients_ih.multiply(this.lr);
 
         let inputs_T = Matrix.transpose(inputs);
